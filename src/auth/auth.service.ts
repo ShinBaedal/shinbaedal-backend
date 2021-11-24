@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Client } from '../shared/client/client.entity';
-import { ClientRepository } from '../shared/client/client.repository';
-import { Owner } from '../shared/owner/owner.entity';
-import { OwnerRepository } from '../shared/owner/owner.repository';
+import { Client } from '../shared/entities/client/client.entity';
+import { ClientRepository } from '../shared/entities/client/client.repository';
+import { Owner } from '../shared/entities/owner/owner.entity';
+import { OwnerRepository } from '../shared/entities/owner/owner.repository';
 import { JwtService } from '@nestjs/jwt';
 import {
   LoginRequestBodyDto,
