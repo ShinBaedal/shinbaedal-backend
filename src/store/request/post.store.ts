@@ -9,6 +9,6 @@ export class PostStoreDto {
   category: string;
   @IsNotEmpty({ message: '사진은 공백이 불가능 합니다.' })
   photoUrl: string;
-  @IsNotEmpty({ message: '사진은 공백이 불가능 합니다.' })
+  @IsNotEmpty({ message: '전화번호는 공백이 불가능 합니다.' })
   tel: string;
 }
