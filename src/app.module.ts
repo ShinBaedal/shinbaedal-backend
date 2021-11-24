@@ -13,6 +13,7 @@ import { Menu } from './shared/entities/menu/menu.entity';
 import { Review } from './shared/entities/review/review.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthModule } from './auth/auth.module';
       ],
     }),
     AuthModule,
+    StoreModule,
   ],
   controllers: [],
   providers: [],
