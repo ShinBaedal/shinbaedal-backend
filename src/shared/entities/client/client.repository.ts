@@ -11,11 +11,15 @@ export class ClientRepository extends Repository<Client> {
   }
 
   async insertOneClient(payload: ClientSignupRequestDto) {
-    await this.createQueryBuilder().insert().into(Client).values({
-      email: payload.email,
-      password: payload.password,
-      name: payload.name,
-      address: payload.address,
-    });
+    await this.createQueryBuilder()
+      .insert()
+      .into(Client)
+      .values({
+        email: payload.email,
+        password: payload.password,
+        name: payload.name,
+        address: payload.address,
+      })
+      .execute();
   }
 }
