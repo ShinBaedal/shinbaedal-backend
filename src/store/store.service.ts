@@ -2,14 +2,12 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UseFilters,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HttpExceptionFilter } from 'src/filter/HttpExceptionFilter';
-import { Category } from 'src/shared/category/category.entity';
-import { CategoryRepository } from 'src/shared/category/category.repository';
-import { Store } from 'src/shared/store/store.entity';
-import { StoreRepository } from 'src/shared/store/store.repository';
+import { Category } from 'src/shared/entities/category/category.entity';
+import { CategoryRepository } from 'src/shared/entities/category/category.repository';
+import { Store } from 'src/shared/entities/store/store.entity';
+import { StoreRepository } from 'src/shared/entities/store/store.repository';
 import { PostStoreDto } from './request/post.store';
 
 @Injectable()

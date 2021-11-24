@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HttpExceptionFilter } from 'src/filter/HttpExceptionFilter';
-import { Category } from 'src/shared/category/category.entity';
-import { Store } from 'src/shared/store/store.entity';
-import { StoreRepository } from 'src/shared/store/store.repository';
+import { HttpExceptionFilter } from 'src/shared/filter/HttpExceptionFilter';
+import { Category } from 'src/shared/entities/category/category.entity';
+import { Store } from 'src/shared/entities/store/store.entity';
 import { StoreController } from './store.controller';
 import { StoreService } from './store.service';
 
