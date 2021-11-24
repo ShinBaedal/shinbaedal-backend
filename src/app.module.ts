@@ -14,6 +14,7 @@ import { Review } from './shared/entities/review/review.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from './store/store.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { StoreModule } from './store/store.module';
     }),
     AuthModule,
     StoreModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],
