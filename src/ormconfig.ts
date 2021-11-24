@@ -4,12 +4,12 @@ import { ConnectionOptions } from 'typeorm';
 
 export const connectionOption: ConnectionOptions = {
   type: 'mysql',
-  host: process.env.PROD_DB_HOST,
-  port: +process.env.PROD_DB_PORT,
-  username: process.env.PROD_DB_USERNAME,
-  password: process.env.PROD_DB_PASSWORD,
-  database: process.env.PROD_DB_DATABASE,
-  synchronize: false,
+  host: process.env.DB_HOST,
+  port: +process.env.DB_PORT,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  synchronize: Boolean(process.env.DB_SYNCHRONIZE),
   logging: false,
   namingStrategy: new SnakeNamingStrategy(),
 };
