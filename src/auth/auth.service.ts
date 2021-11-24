@@ -1,5 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Client } from '../shared/entities/client/client.entity';
 import { ClientRepository } from '../shared/entities/client/client.repository';
 import { Owner } from '../shared/entities/owner/owner.entity';
@@ -10,7 +13,9 @@ import {
   LoginRequestParamDto,
 } from './dto/request/login.dto';
 import { LoginResponseDto } from './dto/response/login.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { ClientSignupRequestDto } from './dto/request/client-signup.dto';
+import { OwnerSignupRequestDto } from './dto/request/owner-signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +38,36 @@ export class AuthService {
       return { access_token: token };
     }
     throw new UnauthorizedException();
+  }
+
+  async signup(
+    payload: ClientSignupRequestDto | OwnerSignupRequestDto,
+    type: string,
+  ) {
+    const res: Owner | Client = await (async () => {
+      switch (type) {
+        case 'owner':
+          return await this.ownerRepository.getOneOwner(payload.email);
+        case 'client':
+          return await this.clientRepository.getOneClient(payload.email);
+      }
+    })();
+
+    if (!res) {
+      payload.password = await bcrypt.hash(payload.password, 12);
+      switch (type) {
+        case 'owner':
+          return await this.ownerRepository.insertOneOwner(
+            payload as OwnerSignupRequestDto,
+          );
+        case 'client':
+          return await this.clientRepository.insertOneClient(
+            payload as ClientSignupRequestDto,
+          );
+      }
+    } else {
+      throw new ConflictException();
+    }
   }
 
   async validateUser(
