@@ -12,6 +12,7 @@ import { OrderMenu } from './shared/orderMenu/order-menu.entity';
 import { Menu } from './shared/menu/menu.entity';
 import { Review } from './shared/review/review.entity';
 import { ConfigModule } from '@nestjs/config';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ConfigModule } from '@nestjs/config';
         Store,
       ],
     }),
+    StoreModule,
   ],
   controllers: [],
   providers: [],
