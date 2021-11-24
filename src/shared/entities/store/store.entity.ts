@@ -28,7 +28,9 @@ export class Store {
   tel: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Category, (category) => category.id, { nullable: false })
+  @ManyToOne((type) => Category, (category) => category.stores, {
+    nullable: false,
+  })
   @JoinColumn({ name: 'category_id' })
   categoryId: Category;
 
