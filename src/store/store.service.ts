@@ -1,7 +1,7 @@
 import {
-  HttpException,
-  HttpStatus,
   Injectable,
+  InternalServerErrorException,
+  NotFoundException,
   UseFilters,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,6 @@ import { CategoryRepository } from 'src/shared/category/category.repository';
 import { Store } from 'src/shared/store/store.entity';
 import { StoreRepository } from 'src/shared/store/store.repository';
 import { PostStoreDto } from './request/post.store';
-import { StoreConvertor } from './store.convertor';
 
 @Injectable()
 export class StoreService {
@@ -20,7 +19,6 @@ export class StoreService {
     private readonly storeRepo: StoreRepository,
     @InjectRepository(Category)
     private readonly categoryRepo: CategoryRepository,
-    private readonly storeConvertor: StoreConvertor,
   ) {}
 
   async addStore(postStoreDto: PostStoreDto) {
@@ -30,19 +28,12 @@ export class StoreService {
       });
 
       if (Category == null) {
-        throw new HttpException(
-          '카테고리를 찾을 수 없습니다.',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new NotFoundException('카테고리를 찾을 수 없습니다.');
       }
-      const store: Store = this.storeConvertor.changePostStoreDto(
-        postStoreDto,
-        category,
-      );
-      await this.storeRepo.save(store);
+
+      await this.storeRepo.savePost(postStoreDto, null, category);
     } catch (e) {
-      console.error(e);
-      throw new HttpException('서버 에러', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('서버 에러');
     }
   }
 }
