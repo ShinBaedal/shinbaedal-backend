@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
@@ -11,6 +12,9 @@ import { Client } from '../client/client.entity';
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  isDone: boolean;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToOne((type) => Client, (client) => client.id)
