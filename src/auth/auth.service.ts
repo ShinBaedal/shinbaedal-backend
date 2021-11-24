@@ -1,4 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Client } from '../shared/client/client.entity';
+import { ClientRepository } from '../shared/client/client.repository';
+import { Owner } from '../shared/owner/owner.entity';
+import { OwnerRepository } from '../shared/owner/owner.repository';
+import { JwtService } from '@nestjs/jwt';
+import {
+  LoginRequestBodyDto,
+  LoginRequestParamDto,
+} from './dto/request/login.dto';
+import { LoginResponseDto } from './dto/response/login.dto';
+import bcrypt from 'bcrypt';
 
 @Injectable()
-export class AuthService {}
+export class AuthService {
+  constructor(
+    @InjectRepository(Client)
+    private readonly clientRepository: ClientRepository,
+    @InjectRepository(Owner)
+    private readonly ownerRepository: OwnerRepository,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async login(
+    payload: LoginRequestBodyDto,
+    param: LoginRequestParamDto,
+  ): Promise<LoginResponseDto> {
+    const res = await this.validateUser(payload, param.type);
+    if (res) {
+      const token = this.jwtService.sign({
+        sub: payload.email,
+        role: param.type,
+      });
+      return { access_token: token };
+    }
+    throw new UnauthorizedException();
+  }
+
+  async validateUser(
+    payload: LoginRequestBodyDto,
+    type: string,
+  ): Promise<boolean> {
+    const res: Owner | Client = await (async () => {
+      switch (type) {
+        case 'owner':
+          return await this.ownerRepository.getOneOwner(payload.email);
+        case 'client':
+          return await this.clientRepository.getOneClient(payload.email);
+      }
+    })();
+    if (!res) return false;
+    return await bcrypt.compare(payload.password, res.password);
+  }
+}
