@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Review } from '../review/review.entity';
 
 @Entity()
@@ -10,6 +16,7 @@ export class ReviewPhoto {
   url: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Review, (review) => review.id)
+  @ManyToOne((type) => Review, (review) => review.id, { nullable: false })
+  @JoinColumn({ name: 'review_id' })
   reviewId: Review;
 }

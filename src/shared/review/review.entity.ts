@@ -26,16 +26,18 @@ export class Review {
   type: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Client, (client) => client.id)
+  @ManyToOne((type) => Client, (client) => client.id, { nullable: false })
+  @JoinColumn({ name: 'client_id' })
   clientId: Client;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Store, (store) => store.id)
+  @ManyToOne((type) => Store, (store) => store.id, { nullable: false })
+  @JoinColumn({ name: 'store_id' })
   storeId: Store;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @OneToOne((type) => Order, (order) => order.id)
-  @JoinColumn()
+  @OneToOne((type) => Order, (order) => order.id, { nullable: false })
+  @JoinColumn({ name: 'order_id' })
   orderId: Order;
 
   @CreateDateColumn()

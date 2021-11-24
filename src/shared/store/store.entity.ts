@@ -27,11 +27,12 @@ export class Store {
   tel: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @OneToOne((type) => Category, (category) => category.id)
-  @JoinColumn()
+  @OneToOne((type) => Category, (category) => category.id, { nullable: false })
+  @JoinColumn({ name: 'category_id' })
   categoryId: Category;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Owner, (owner) => owner.id)
+  @ManyToOne((type) => Owner, (owner) => owner.id, { nullable: false })
+  @JoinColumn({ name: 'owner_id' })
   ownerId: Owner;
 }

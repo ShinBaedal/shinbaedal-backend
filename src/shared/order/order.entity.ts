@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,11 +18,13 @@ export class Order {
   isDone: boolean;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Client, (client) => client.id)
+  @ManyToOne((type) => Client, (client) => client.id, { nullable: false })
+  @JoinColumn({ name: 'client_id' })
   clientId: Client;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Store, (store) => store.id)
+  @ManyToOne((type) => Store, (store) => store.id, { nullable: false })
+  @JoinColumn({ name: 'store_id' })
   storeId: Store;
 
   @CreateDateColumn()
