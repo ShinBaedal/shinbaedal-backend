@@ -15,9 +15,7 @@ import bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Client)
     private readonly clientRepository: ClientRepository,
-    @InjectRepository(Owner)
     private readonly ownerRepository: OwnerRepository,
     private readonly jwtService: JwtService,
   ) {}
