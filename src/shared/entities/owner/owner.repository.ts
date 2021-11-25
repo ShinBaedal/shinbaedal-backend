@@ -6,8 +6,8 @@ import { UpdateUserDto } from 'src/user/request/patch.user';
 @EntityRepository(Owner)
 export class OwnerRepository extends Repository<Owner> {
   async getOneOwner(email: string) {
-    return await this.createQueryBuilder('client')
-      .where('client.email = :email', { email })
+    return await this.createQueryBuilder('owner')
+      .where('owner.email = :email', { email })
       .getOne();
   }
 
