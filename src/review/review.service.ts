@@ -86,7 +86,7 @@ export class ReviewService {
     type: string,
   ): Promise<ReviewListResponseDto> {
     const [res, count] = await this.reviewRepository.getReviews(storeId, type);
-    if (!count) throw new NotFoundException();
+    if (!count) throw new NotFoundException('리뷰를 찾을 수 없습니다.');
 
     const reviews = res.map(
       (review): ReviewDto => ({

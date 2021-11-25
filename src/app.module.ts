@@ -19,6 +19,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     StoreModule,
+    MenuModule,
     FileModule,
     ReviewModule,
     UserModule,

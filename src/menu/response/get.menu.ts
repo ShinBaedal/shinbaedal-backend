@@ -4,12 +4,12 @@ export class GetMenuResponse {
   id: number;
   name: string;
   price: number;
-  photo_url: string;
+  photoUrl: string;
 
   constructor(menu: Menu) {
     this.id = menu.id;
     this.name = menu.name;
     this.price = menu.price;
-    this.photo_url = menu.photoUrl;
+    this.photoUrl = menu.photoUrl;
   }
 }
