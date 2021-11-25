@@ -3,7 +3,7 @@ import { ResponseData } from 'src/shared/response/ResponseData';
 import { MenuService } from './menu.service';
 import { GetMenuResponse } from './response/get.menu';
 
-@Controller('/menu')
+@Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
   @Get('/list/:store_id')
