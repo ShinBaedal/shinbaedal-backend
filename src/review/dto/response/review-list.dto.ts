@@ -17,7 +17,6 @@ export class ReviewDto {
   content: string;
   rate: number;
   reply: {
-    id: number;
     content: string;
   };
 }
