@@ -49,7 +49,7 @@ export class ReviewRepository extends Repository<Review> {
       .execute();
   }
 
-  async getReviews(storeId: string): Promise<[Review[], number]> {
+  async getReviews(storeId: string, type: string): Promise<[Review[], number]> {
     return await this.createQueryBuilder('review')
       .leftJoinAndSelect('review.orderId', 'orderId')
       .leftJoinAndSelect('review.clientId', 'clientId')

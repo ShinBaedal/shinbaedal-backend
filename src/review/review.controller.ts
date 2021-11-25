@@ -68,7 +68,7 @@ export class ReviewController {
     return new ResponseData(
       HttpStatus.OK,
       'List of reviews successfully retrieved',
-      await this.reviewService.getReviewList(param.storeId),
+      await this.reviewService.getReviewList(param.storeId, query.type),
     );
   }
 }
