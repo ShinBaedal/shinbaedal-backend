@@ -69,14 +69,20 @@ export class AuthService {
       payload.password = await bcrypt.hash(payload.password, 12);
       switch (type) {
         case 'owner':
-          return await this.ownerRepository.insertOneOwner(
+          await this.ownerRepository.insertOneOwner(
             payload as OwnerSignupRequestDto,
           );
+          break;
         case 'client':
-          return await this.clientRepository.insertOneClient(
+          await this.clientRepository.insertOneClient(
             payload as ClientSignupRequestDto,
           );
       }
+      const token = this.jwtService.sign({
+        sub: payload.email,
+        role: type,
+      });
+      return { access_token: token };
     } else {
       throw new ConflictException();
     }
