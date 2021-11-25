@@ -14,6 +14,18 @@ export class OrderRepository extends Repository<Order> {
       .getOne();
   }
 
+  async getOrderByStoreId(storeId: string, email: string): Promise<Order> {
+    return await this.createQueryBuilder('order')
+      .select()
+      .leftJoinAndSelect('order.clientId', 'clientId')
+      .leftJoinAndSelect('order.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
+      .where('storeId.id = :storeId', { storeId })
+      .andWhere('clientId.email = :email', { email })
+      .orderBy('order.createdAt', 'DESC')
+      .getOne();
+  }
+
   async insertOneOrder(payload: CreateOrderPayload): Promise<InsertResult> {
     return await this.createQueryBuilder()
       .insert()
