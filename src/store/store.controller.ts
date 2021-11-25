@@ -52,13 +52,17 @@ export class StoreController {
 
   @Get('/list/:category')
   @UseFilters(new HttpExceptionFilter())
+  @UseGuards(JwtAuthGuard)
   async getStores(
     @Param('category') category: string,
     @Query('address') address: string,
+    @Req() request,
   ): Promise<ResponseData<GetPostList[]>> {
+    const user = request.user;
     const posts: GetPostList[] = await this.storeService.getStores(
       category,
       address,
+      user,
     );
     return new ResponseData(HttpStatus.OK, '성공', posts);
   }

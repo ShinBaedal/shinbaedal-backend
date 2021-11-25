@@ -29,18 +29,11 @@ export class OrderService {
     if (menus.length !== payload.menuIds.length)
       throw new BadRequestException();
 
-    const { id } = (
-      await this.orderRepository.insertOneOrder({
-        clientId: (await this.clientRepository.getOneClient(email)).id,
-        storeId: (await this.storeRepository.getStore(payload.storeId)).id,
-        orderMenu: menus,
-      })
-    )[0];
-
-    await this.orderMenuRepository.insertOrderMenus(
-      id,
-      menus.map((menu) => menu.id),
-    );
+    await this.orderRepository.insertOneOrder({
+      clientId: (await this.clientRepository.getOneClient(email)).id,
+      storeId: (await this.storeRepository.getStore(payload.storeId)).id,
+      orderMenu: menus,
+    });
   }
 
   async markOrderAsDone(email: string, orderId: number): Promise<void> {

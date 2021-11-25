@@ -13,7 +13,7 @@ export class GetPost {
     this.id = store.id;
     this.name = store.name;
     this.rate = Number(avg.avg);
-    this.photoUrl = store.photoUrl;
+    this.photoUrl = store.photo_url;
     this.tel = store.tel;
     this.address = store.address;
     this.category = store.category;
