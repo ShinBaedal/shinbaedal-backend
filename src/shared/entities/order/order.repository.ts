@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, InsertResult, Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { CreateOrderPayload } from '../../../order/interfaces/create-order-payload.interface';
 
@@ -14,8 +14,8 @@ export class OrderRepository extends Repository<Order> {
       .getOne();
   }
 
-  async insertOneOrder(payload: CreateOrderPayload): Promise<void> {
-    await this.createQueryBuilder()
+  async insertOneOrder(payload: CreateOrderPayload): Promise<InsertResult> {
+    return await this.createQueryBuilder()
       .insert()
       .into(Order)
       .values({

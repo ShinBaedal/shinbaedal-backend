@@ -6,7 +6,7 @@ import { GetMenuResponse } from './response/get.menu';
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
-  @Get('/list/:store_id')
+  @Get('/:store_id')
   async getMenu(
     @Param('store_id') storeId: number,
   ): Promise<ResponseData<GetMenuResponse[]>> {

@@ -47,7 +47,6 @@ import { MenuModule } from './menu/menu.module';
     }),
     AuthModule,
     StoreModule,
-    MenuModule,
     FileModule,
     ReviewModule,
     UserModule,

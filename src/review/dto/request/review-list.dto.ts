@@ -1,11 +1,6 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class ReviewListRequestParamDto {
+export class ReviewListRequestDto {
   @IsString()
   storeId: string;
-}
-
-export class ReviewListRequestQueryDto {
-  @IsEnum(['POSITIVE', 'NEUTRAL', 'NEGATIVE'])
-  type: string;
 }
