@@ -42,10 +42,10 @@ export class ReviewService {
       req.user.email,
       param.orderId,
     );
-    if (!order) throw new NotFoundException();
+    if (!order) throw new NotFoundException('주문을 찾을 수 없음');
 
     const review = await this.reviewRepository.isReviewExist(param.orderId);
-    if (review) throw new ConflictException();
+    if (review) throw new ConflictException('이미 리뷰가 존재함');
 
     const res = await lastValueFrom(
       this.httpService.post(process.env.CLOVA_SENTIMENT_API_URL, {
@@ -69,10 +69,10 @@ export class ReviewService {
     param: CreateReplyRequestParamDto,
   ): Promise<void> {
     const review = await this.reviewRepository.getReview(param.reviewId);
-    if (!review) throw new NotFoundException();
+    if (!review) throw new NotFoundException('리뷰를 찾을 수 없음');
 
     if (review.storeId.ownerId.email !== req.user.email)
-      throw new ForbiddenException();
+      throw new ForbiddenException('유저의 주문이 아님');
 
     await this.replyRepository.insertOneReply({
       reviewId: param.reviewId,
