@@ -1,11 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Review } from '../review/review.entity';
 import { Store } from '../store/store.entity';
 
 @Entity()
 export class Reply {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Review, (review) => review.id, { primary: true })
+  @OneToOne((type) => Review, (review) => review.replyId, { primary: true })
   @JoinColumn({ name: 'review_id' })
   reviewId: Review;
 
