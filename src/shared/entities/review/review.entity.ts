@@ -10,7 +10,6 @@ import {
 import { Client } from '../client/client.entity';
 import { Store } from '../store/store.entity';
 import { Order } from '../order/order.entity';
-import { Type } from 'src/shared/enums/review.type';
 
 @Entity()
 export class Review {
