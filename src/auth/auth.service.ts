@@ -93,7 +93,7 @@ export class AuthService {
     const cache = await this.cacheManager.get<string | undefined>(email);
     const isExist =
       (await this.clientRepository.count({ where: { email } })) +
-      (await this.clientRepository.count({ where: { email } }));
+      (await this.ownerRepository.count({ where: { email } }));
     if (cache === 'DONE' || isExist) throw new ConflictException();
 
     const number = crypto.randomInt(0, 999999).toString().padStart(6, '0');
