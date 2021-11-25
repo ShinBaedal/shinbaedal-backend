@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   Param,
+  Get,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { Roles } from '../shared/decorators/roles.decorator';
@@ -15,12 +16,14 @@ import { Role } from '../shared/enums/role.enum';
 import {
   CreateReviewRequestBodyDto,
   CreateReviewRequestParamDto,
-} from './request/create-review.dto';
+} from './dto/request/create-review.dto';
 import { Response } from '../shared/response/Response';
 import {
   CreateReplyRequestBodyDto,
   CreateReplyRequestParamDto,
-} from './request/create-reply.dto';
+} from './dto/request/create-reply.dto';
+import { ReviewListRequestDto } from './dto/request/review-list.dto';
+import { ResponseData } from '../shared/response/ResponseData';
 
 @Controller('review')
 export class ReviewController {
@@ -50,5 +53,15 @@ export class ReviewController {
   ) {
     await this.reviewService.createReply(req, payload, param);
     return new Response(HttpStatus.CREATED, 'Reply created successfully');
+  }
+
+  @Get('list/:storeId')
+  @UseGuards(JwtAuthGuard)
+  async getReviewList(@Param() param: ReviewListRequestDto) {
+    return new ResponseData(
+      HttpStatus.OK,
+      'List of reviews successfully retrieved',
+      await this.reviewService.getReviewList(param.storeId),
+    );
   }
 }

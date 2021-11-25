@@ -8,7 +8,7 @@ import { ReviewRepository } from '../shared/entities/review/review.repository';
 import {
   CreateReviewRequestBodyDto,
   CreateReviewRequestParamDto,
-} from './request/create-review.dto';
+} from './dto/request/create-review.dto';
 import { OrderRepository } from '../shared/entities/order/order.repository';
 import { HttpService } from '@nestjs/axios';
 import { ClientRepository } from '../shared/entities/client/client.repository';
@@ -16,8 +16,12 @@ import { lastValueFrom } from 'rxjs';
 import {
   CreateReplyRequestBodyDto,
   CreateReplyRequestParamDto,
-} from './request/create-reply.dto';
+} from './dto/request/create-reply.dto';
 import { ReplyRepository } from '../shared/entities/reply/reply.repository';
+import {
+  ReviewDto,
+  ReviewListResponseDto,
+} from './dto/response/review-list.dto';
 
 @Injectable()
 export class ReviewService {
@@ -75,5 +79,37 @@ export class ReviewService {
       storeId: review.storeId.id,
       content: payload.content,
     });
+  }
+
+  async getReviewList(storeId: string): Promise<ReviewListResponseDto> {
+    const [res, count] = await this.reviewRepository.getReviews(storeId);
+    if (!count) throw new NotFoundException();
+
+    const reviews = res.map(
+      (review): ReviewDto => ({
+        id: review.id,
+        user: {
+          id: review.clientId.id,
+          name: review.clientId.name,
+        },
+        menuNames: review.orderId.orderMenu.map(
+          (orderMenu) => orderMenu.menuId.name,
+        ),
+        type: review.type,
+        createdAt: review.createdAt,
+        content: review.content,
+        rate: review.rate,
+        reply: {
+          content: review.replyId.content,
+        },
+      }),
+    );
+
+    return {
+      storeId: res[0].storeId.id,
+      storeName: res[0].storeId.name,
+      reviewCount: count,
+      reviews,
+    };
   }
 }

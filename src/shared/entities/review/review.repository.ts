@@ -48,4 +48,17 @@ export class ReviewRepository extends Repository<Review> {
       })
       .execute();
   }
+
+  async getReviews(storeId: string): Promise<[Review[], number]> {
+    return await this.createQueryBuilder('review')
+      .leftJoinAndSelect('review.orderId', 'orderId')
+      .leftJoinAndSelect('review.clientId', 'clientId')
+      .leftJoinAndSelect('review.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
+      .leftJoinAndSelect('review.replyId', 'replyId')
+      .leftJoinAndSelect('orderId.orderMenu', 'orderMenu')
+      .leftJoinAndSelect('orderMenu.menuId', 'menuId')
+      .andWhere('storeId.id = :storeId', { storeId })
+      .getManyAndCount();
+  }
 }
