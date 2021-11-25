@@ -14,14 +14,24 @@ export class ReviewRepository extends Repository<Review> {
       .getRawOne();
   }
 
-  async isReviewExist(email: string, orderId: string): Promise<number> {
+  async isReviewExist(orderId: string): Promise<number> {
     return await this.createQueryBuilder('review')
       .select()
       .leftJoinAndSelect('review.orderId', 'orderId')
       .leftJoinAndSelect('review.clientId', 'clientId')
-      .where('clientId.email = :email', { email })
       .andWhere('orderId.id = :orderId', { orderId })
       .getCount();
+  }
+
+  async getReview(reviewId: string): Promise<Review> {
+    return await this.createQueryBuilder('review')
+      .select()
+      .leftJoinAndSelect('review.orderId', 'orderId')
+      .leftJoinAndSelect('review.clientId', 'clientId')
+      .leftJoinAndSelect('review.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
+      .andWhere('review.id = :reviewId', { reviewId })
+      .getOne();
   }
 
   async insertOneReview(payload: CreateReviewPayload) {
