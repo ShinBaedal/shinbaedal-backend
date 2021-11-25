@@ -17,7 +17,10 @@ export class PostStoreDto {
 }
 
 export class MenuDto {
+  @IsNotEmpty({ message: '사진은 공백이 불가능 합니다.' })
   photoUrl: string;
+  @IsNotEmpty({ message: '이름은 공백이 불가능 합니다.' })
   name: string;
+  @IsNotEmpty({ message: '가격은 공백이 불가능 합니다.' })
   price: number;
 }

@@ -45,7 +45,7 @@ export class AuthService {
         sub: payload.email,
         role: param.type,
       });
-      return { access_token: token };
+      return { token: token };
     }
     throw new UnauthorizedException();
   }
@@ -82,7 +82,7 @@ export class AuthService {
         sub: payload.email,
         role: type,
       });
-      return { access_token: token };
+      return { token: token };
     } else {
       throw new ConflictException();
     }
