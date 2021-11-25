@@ -5,9 +5,9 @@ import { CreateReviewPayload } from '../../../review/interfaces/create-review-pa
 @EntityRepository(Review)
 export class ReviewRepository extends Repository<Review> {
   async getAvg(store_id: number): Promise<number> {
-    return this.createQueryBuilder('review')
-      .select('IFNULL(AVG(Review.rate),0)', 'avg')
-      .where('Review.store_id = :store_id and Review.type != :t', {
+    return this.createQueryBuilder()
+      .select('IFNULL(AVG(review.rate),0)', 'avg')
+      .where('review.store_id = :store_id and review.type != :t', {
         t: 'MALIGNITY',
         store_id: store_id,
       })
