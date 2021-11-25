@@ -38,11 +38,9 @@ export class ReviewService {
     payload: CreateReviewRequestBodyDto,
     param: CreateReviewRequestParamDto,
   ): Promise<void> {
-    const order = await this.orderRepository.getOrder(
-      req.user.email,
-      param.orderId,
-    );
+    const order = await this.orderRepository.getOrder(param.orderId);
     if (!order) throw new NotFoundException();
+    if (order.clientId.email !== req.user.email) throw new ForbiddenException();
 
     const review = await this.reviewRepository.isReviewExist(param.orderId);
     if (review) throw new ConflictException();

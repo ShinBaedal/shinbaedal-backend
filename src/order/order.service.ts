@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateOrderRequestDto } from './dto/request/create-order.dto';
 import { OrderRepository } from '../shared/entities/order/order.repository';
 import { ClientRepository } from '../shared/entities/client/client.repository';
@@ -25,5 +31,14 @@ export class OrderService {
       storeId: (await this.storeRepository.getStore(payload.storeId)).id,
       orderMenu: menus,
     });
+  }
+
+  async markOrderAsDone(email: string, orderId: number): Promise<void> {
+    const order = await this.orderRepository.getOrder(orderId.toString());
+    if (!order) throw new NotFoundException();
+    if (order.storeId.ownerId.email !== email) throw new ForbiddenException();
+    if (order.isDone) throw new ConflictException();
+
+    await this.orderRepository.markOrderAsDone(orderId);
   }
 }
