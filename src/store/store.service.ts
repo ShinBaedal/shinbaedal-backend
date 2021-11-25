@@ -9,7 +9,7 @@ import { CategoryRepository } from 'src/shared/entities/category/category.reposi
 import { Store } from 'src/shared/entities/store/store.entity';
 import { StoreRepository } from 'src/shared/entities/store/store.repository';
 import { PostStoreDto } from './request/post.store';
-import { GetPost } from './response/get.post';
+import { GetPost, GetPostList } from './response/get.post';
 import { Owner } from 'src/shared/entities/owner/owner.entity';
 import { OwnerRepository } from 'src/shared/entities/owner/owner.repository';
 import { ReviewRepository } from 'src/shared/entities/review/review.repository';
@@ -66,5 +66,19 @@ export class StoreService {
       console.log(e);
       throw new InternalServerErrorException('서버 에러');
     }
+  }
+
+  async getStores(category: string, address: string): Promise<GetPostList[]> {
+    const location = address.split(' ').slice(0, 3).join(' ');
+    const store = await this.storeRepo.getStores(category, location);
+
+    const storeDtos: GetPostList[] = await Promise.all(
+      store.map(async (data) => {
+        const rate = await this.reviewRepo.getAvg(data.id);
+        return await new GetPostList(data, rate);
+      }),
+    );
+
+    return storeDtos;
   }
 }
