@@ -7,6 +7,7 @@ import {
   Request,
   Param,
   Get,
+  Query,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { Roles } from '../shared/decorators/roles.decorator';
@@ -22,7 +23,10 @@ import {
   CreateReplyRequestBodyDto,
   CreateReplyRequestParamDto,
 } from './dto/request/create-reply.dto';
-import { ReviewListRequestDto } from './dto/request/review-list.dto';
+import {
+  ReviewListRequestParamDto,
+  ReviewListRequestQueryDto,
+} from './dto/request/review-list.dto';
 import { ResponseData } from '../shared/response/ResponseData';
 
 @Controller('review')
@@ -57,11 +61,14 @@ export class ReviewController {
 
   @Get('list/:storeId')
   @UseGuards(JwtAuthGuard)
-  async getReviewList(@Param() param: ReviewListRequestDto) {
+  async getReviewList(
+    @Param() param: ReviewListRequestParamDto,
+    @Query() query: ReviewListRequestQueryDto,
+  ) {
     return new ResponseData(
       HttpStatus.OK,
       'List of reviews successfully retrieved',
-      await this.reviewService.getReviewList(param.storeId),
+      await this.reviewService.getReviewList(param.storeId, query.type),
     );
   }
 }

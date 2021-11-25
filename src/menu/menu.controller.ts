@@ -3,10 +3,10 @@ import { ResponseData } from 'src/shared/response/ResponseData';
 import { MenuService } from './menu.service';
 import { GetMenuResponse } from './response/get.menu';
 
-@Controller('menu')
+@Controller('/menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
-  @Get('/:store_id')
+  @Get('/list/:store_id')
   async getMenu(
     @Param('store_id') storeId: number,
   ): Promise<ResponseData<GetMenuResponse[]>> {

@@ -49,7 +49,7 @@ export class ReviewRepository extends Repository<Review> {
       .execute();
   }
 
-  async getReviews(storeId: string): Promise<[Review[], number]> {
+  async getReviews(storeId: string, type: string): Promise<[Review[], number]> {
     return await this.createQueryBuilder('review')
       .leftJoinAndSelect('review.orderId', 'orderId')
       .leftJoinAndSelect('review.clientId', 'clientId')
@@ -58,6 +58,9 @@ export class ReviewRepository extends Repository<Review> {
       .leftJoinAndSelect('review.replyId', 'replyId')
       .leftJoinAndSelect('orderId.orderMenu', 'orderMenu')
       .leftJoinAndSelect('orderMenu.menuId', 'menuId')
+      .where('review.type IN (:...type)', {
+        type: type === 'NEGATIVE' ? ['NEGATIVE', 'MALIGNITY'] : [type],
+      })
       .andWhere('storeId.id = :storeId', { storeId })
       .getManyAndCount();
   }

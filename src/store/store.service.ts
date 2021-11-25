@@ -68,10 +68,38 @@ export class StoreService {
     }
   }
 
-  async getStores(category: string, address: string): Promise<GetPostList[]> {
+  async getStores(
+    category: string,
+    address: string,
+    user,
+  ): Promise<GetPostList[]> {
+    console.log(user);
+    if (user.role === 'client') {
+      return await this.getStoreByClient(category, address);
+    } else {
+      return await this.getOwnerStore(user.email);
+    }
+  }
+
+  private async getStoreByClient(category, address): Promise<GetPostList[]> {
     const location = address.split(' ').slice(0, 3).join(' ');
     const store = await this.storeRepo.getStores(category, location);
 
+    const storeDtos: GetPostList[] = await Promise.all(
+      store.map(async (data) => {
+        const rate = await this.reviewRepo.getAvg(data.id);
+        return await new GetPostList(data, rate);
+      }),
+    );
+
+    return storeDtos;
+  }
+
+  private async getOwnerStore(email: string): Promise<GetPostList[]> {
+    const owner: Owner = await this.ownerRepo.findOne({
+      where: { email: email },
+    });
+    const store = await this.storeRepo.getOwnerStores(owner);
     const storeDtos: GetPostList[] = await Promise.all(
       store.map(async (data) => {
         const rate = await this.reviewRepo.getAvg(data.id);
