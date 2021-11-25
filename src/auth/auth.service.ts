@@ -47,7 +47,7 @@ export class AuthService {
       });
       return { token: token };
     }
-    throw new UnauthorizedException();
+    throw new UnauthorizedException('인증 실패');
   }
 
   async signup(
@@ -65,7 +65,8 @@ export class AuthService {
 
     if (!res) {
       const cache = await this.cacheManager.get(payload.email);
-      if (!cache || cache !== 'DONE') throw new UnauthorizedException();
+      if (!cache || cache !== 'DONE')
+        throw new UnauthorizedException('인증 실패');
       payload.password = await bcrypt.hash(payload.password, 12);
       switch (type) {
         case 'owner':
@@ -84,7 +85,7 @@ export class AuthService {
       });
       return { token: token };
     } else {
-      throw new ConflictException();
+      throw new ConflictException('이미 사용자가 존재함');
     }
   }
 
@@ -107,12 +108,13 @@ export class AuthService {
 
   async checkMail({ email, code }: ConfirmEmailRequestDto) {
     const cache = await this.cacheManager.get<string | undefined>(email);
-    if (!cache || cache === 'DONE') throw new NotFoundException();
+    if (!cache || cache === 'DONE')
+      throw new NotFoundException('이메일을 찾을 수 없음');
     if (cache === code) {
       await this.cacheManager.del(email);
       await this.cacheManager.set(email, 'DONE');
       return;
-    } else throw new UnauthorizedException();
+    } else throw new UnauthorizedException('인증 실패');
   }
 
   async validateUser(
