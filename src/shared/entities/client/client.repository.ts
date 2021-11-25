@@ -34,4 +34,14 @@ export class ClientRepository extends Repository<Client> {
       .where('email = :email', { email: email })
       .execute();
   }
+
+  async updateClientAddress(email: string, address: string) {
+    await this.createQueryBuilder()
+      .update(Client)
+      .set({
+        address: address,
+      })
+      .where('email = :email', { email: email })
+      .execute();
+  }
 }

@@ -5,7 +5,7 @@ import { ClientRepository } from 'src/shared/entities/client/client.repository';
 import { Owner } from 'src/shared/entities/owner/owner.entity';
 import * as bcrypt from 'bcrypt';
 import { OwnerRepository } from 'src/shared/entities/owner/owner.repository';
-import { UpdateUserDto } from './request/patch.user';
+import { UpdateUserAddressDto, UpdateUserDto } from './request/patch.user';
 import { GetUserResponse } from './response/get.user';
 
 @Injectable()
@@ -23,6 +23,13 @@ export class UserService {
   async updateUser(user, updateUserDto: UpdateUserDto) {
     updateUserDto.password = await bcrypt.hash(updateUserDto.password, 12);
     await this.update(user.email, user.role, updateUserDto);
+  }
+
+  async updateUserAddress(user, updateUserAddressDto: UpdateUserAddressDto) {
+    await this.clientRepo.updateClientAddress(
+      user.email,
+      updateUserAddressDto.address,
+    );
   }
 
   private async getUser(email: string, role: string): Promise<any> {

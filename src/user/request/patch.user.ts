@@ -8,3 +8,9 @@ export class UpdateUserDto {
   @IsString()
   password: string;
 }
+
+export class UpdateUserAddressDto {
+  @IsNotEmpty()
+  @IsString()
+  address: string;
+}
