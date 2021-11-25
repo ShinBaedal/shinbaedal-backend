@@ -36,4 +36,12 @@ export class StoreRepository extends Repository<Store> {
       .where('store.id = :store_id', { store_id: storeId })
       .getRawOne();
   }
+
+  async getStores(category: string, address: string): Promise<any> {
+    return await this.createQueryBuilder('store')
+      .innerJoin('category', 'category', 'store.category_id = category.id')
+      .select('store.*, category.category')
+      .where('store.address like :address', { address: `${address}%` })
+      .getRawMany();
+  }
 }

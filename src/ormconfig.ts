@@ -10,6 +10,6 @@ export const connectionOption: ConnectionOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   synchronize: Boolean(process.env.DB_SYNCHRONIZE),
-  logging: false,
+  logging: true,
   namingStrategy: new SnakeNamingStrategy(),
 };

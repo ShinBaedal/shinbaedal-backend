@@ -6,7 +6,7 @@ import { Review } from './review.entity';
 export class ReviewRepository extends Repository<Review> {
   async getAvg(store_id: number): Promise<number> {
     return this.createQueryBuilder()
-      .select('SUM(review.rate)', 'avg')
+      .select('IFNULL(AVG(review.rate),0)', 'avg')
       .where('review.store_id = :store_id and review.type != :t', {
         t: 'MALIGNITY',
         store_id: store_id,
