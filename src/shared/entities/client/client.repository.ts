@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Client } from './client.entity';
 import { ClientSignupRequestDto } from '../../../auth/dto/request/client-signup.dto';
+import { UpdateUserDto } from 'src/user/request/patch.user';
 
 @EntityRepository(Client)
 export class ClientRepository extends Repository<Client> {
@@ -20,6 +21,17 @@ export class ClientRepository extends Repository<Client> {
         name: payload.name,
         address: payload.address,
       })
+      .execute();
+  }
+
+  async updateClient(email: string, payload: UpdateUserDto) {
+    await this.createQueryBuilder()
+      .update(Client)
+      .set({
+        name: payload.name,
+        password: payload.password,
+      })
+      .where('email = :email', { email: email })
       .execute();
   }
 }
