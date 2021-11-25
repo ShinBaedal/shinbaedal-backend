@@ -6,8 +6,8 @@ export class CreateReviewRequestBodyDto {
   content: string;
 
   @IsNumber()
-  @Min(1)
-  @Max(5)
+  @Min(0)
+  @Max(10)
   @Type(() => Number)
   rate: number;
 
