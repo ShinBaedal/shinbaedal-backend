@@ -20,6 +20,7 @@ export class OrderMenuRepository extends Repository<OrderMenu> {
           orderId: () => orderId.toString(),
           menuId: () => menuId.toString(),
         })),
-      );
+      )
+      .execute();
   }
 }

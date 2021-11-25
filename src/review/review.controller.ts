@@ -65,10 +65,16 @@ export class ReviewController {
     @Param() param: ReviewListRequestParamDto,
     @Query() query: ReviewListRequestQueryDto,
   ) {
+    const res = await this.reviewService.getReviewList(
+      param.storeId,
+      query.type,
+    );
     return new ResponseData(
       HttpStatus.OK,
-      'List of reviews successfully retrieved',
-      await this.reviewService.getReviewList(param.storeId, query.type),
+      res
+        ? 'List of reviews successfully retrieved'
+        : 'The request is normal, but the data does not exist',
+      res,
     );
   }
 }
