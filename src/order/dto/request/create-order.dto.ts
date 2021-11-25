@@ -1,9 +1,7 @@
-import { IsNumber } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateOrderRequestDto {
-  @IsNumber()
-  @Type(() => Number)
+  @IsString()
   storeId: number;
 
   @IsNumber({}, { each: true })

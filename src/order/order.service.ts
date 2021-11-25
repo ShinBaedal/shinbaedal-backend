@@ -29,13 +29,14 @@ export class OrderService {
     if (menus.length !== payload.menuIds.length)
       throw new BadRequestException();
 
+    if (!(await this.storeRepository.getStore(payload.storeId)))
+      throw new NotFoundException('가게를 찾을 수 없습니다.');
+
     const insertResult = await this.orderRepository.insertOneOrder({
       clientId: (await this.clientRepository.getOneClient(email)).id,
-      storeId: (await this.storeRepository.getStore(payload.storeId)).id,
+      storeId: payload.storeId,
       orderMenu: menus,
     });
-
-    console.log(insertResult);
 
     await this.orderMenuRepository.insertOrderMenus(
       Number(insertResult.identifiers[0].id),
