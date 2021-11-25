@@ -102,7 +102,7 @@ export class ReviewService {
         content: review.content,
         rate: review.rate,
         reply: {
-          content: review.replyId.content,
+          content: review.replyId?.content,
         },
       }),
     );
