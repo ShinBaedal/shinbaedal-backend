@@ -42,5 +42,9 @@ export class OrderController {
     @Param() param: MarkOrderDoneRequestDto,
   ) {
     await this.orderService.markOrderAsDone(req.user.email, param.orderId);
+    return new Response(
+      HttpStatus.CREATED,
+      `Order ${param.orderId} marked as done successfully`,
+    );
   }
 }
