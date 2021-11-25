@@ -70,18 +70,15 @@ export class StoreService {
 
   async getStores(category: string, address: string): Promise<GetPostList[]> {
     const location = address.split(' ').slice(0, 3).join(' ');
-    console.log(location);
     const store = await this.storeRepo.getStores(category, location);
 
     const storeDtos: GetPostList[] = await Promise.all(
       store.map(async (data) => {
-        console.log(data);
         const rate = await this.reviewRepo.getAvg(data.id);
         return await new GetPostList(data, rate);
       }),
     );
 
-    console.log(storeDtos);
     return storeDtos;
   }
 }
