@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Query,
@@ -16,6 +17,8 @@ import { ClientSignupRequestDto } from './dto/request/client-signup.dto';
 import { OwnerSignupRequestDto } from './dto/request/owner-signup.dto';
 import { CheckEmailRequestDto } from './dto/request/check-email.dto';
 import { ConfirmEmailRequestDto } from './dto/request/confirm-email.dto';
+import { ResponseData } from '../shared/response/ResponseData';
+import { Response } from '../shared/response/Response';
 
 @Controller('auth')
 export class AuthController {
@@ -26,27 +29,41 @@ export class AuthController {
     @Body() payload: LoginRequestBodyDto,
     @Param() param: LoginRequestParamDto,
   ) {
-    return this.authService.login(payload, param);
+    return new ResponseData(
+      HttpStatus.OK,
+      'Successfully logged in.',
+      await this.authService.login(payload, param),
+    );
   }
 
   @Post('signup/client')
   async signupClient(@Body() payload: ClientSignupRequestDto) {
-    return this.authService.signup(payload, 'client');
+    return new ResponseData(
+      HttpStatus.CREATED,
+      'Successfully signed up.',
+      await this.authService.signup(payload, 'client'),
+    );
   }
 
   @Post('signup/owner')
   async signupOwner(@Body() payload: OwnerSignupRequestDto) {
-    return this.authService.signup(payload, 'owner');
+    return new ResponseData(
+      HttpStatus.CREATED,
+      'Successfully signed up.',
+      await this.authService.signup(payload, 'owner'),
+    );
   }
 
   @Get('email')
   async checkEmail(@Query() query: CheckEmailRequestDto) {
-    return this.authService.sendMail(query.email);
+    await this.authService.sendMail(query.email);
+    return new Response(HttpStatus.OK, 'Email sent successfully.');
   }
 
   @Post('email')
   @HttpCode(200)
   async confirmEmail(@Body() payload: ConfirmEmailRequestDto) {
-    return this.authService.checkMail(payload);
+    await this.authService.checkMail(payload);
+    return new Response(HttpStatus.OK, 'Email verified successfully.');
   }
 }
