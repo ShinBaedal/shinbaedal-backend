@@ -38,11 +38,9 @@ export class ReviewService {
     payload: CreateReviewRequestBodyDto,
     param: CreateReviewRequestParamDto,
   ): Promise<void> {
-    const order = await this.orderRepository.getOrder(
-      req.user.email,
-      param.orderId,
-    );
+    const order = await this.orderRepository.getOrder(param.orderId);
     if (!order) throw new NotFoundException('주문을 찾을 수 없음');
+    if (order.clientId.email !== req.user.email) throw new ForbiddenException();
 
     const review = await this.reviewRepository.isReviewExist(param.orderId);
     if (review) throw new ConflictException('이미 리뷰가 존재함');
