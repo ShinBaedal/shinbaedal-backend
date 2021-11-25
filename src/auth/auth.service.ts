@@ -1,10 +1,15 @@
 import {
+  CACHE_MANAGER,
   ConflictException,
+  Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Cache } from 'cache-manager';
 import { Client } from '../shared/entities/client/client.entity';
 import { ClientRepository } from '../shared/entities/client/client.repository';
+import * as crypto from 'crypto';
 import { Owner } from '../shared/entities/owner/owner.entity';
 import { OwnerRepository } from '../shared/entities/owner/owner.repository';
 import { JwtService } from '@nestjs/jwt';
@@ -16,11 +21,16 @@ import { LoginResponseDto } from './dto/response/login.dto';
 import * as bcrypt from 'bcrypt';
 import { ClientSignupRequestDto } from './dto/request/client-signup.dto';
 import { OwnerSignupRequestDto } from './dto/request/owner-signup.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfirmEmailRequestDto } from './dto/request/confirm-email.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
     private readonly clientRepository: ClientRepository,
+    private readonly mailerService: MailerService,
     private readonly ownerRepository: OwnerRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -54,6 +64,8 @@ export class AuthService {
     })();
 
     if (!res) {
+      const cache = await this.cacheManager.get(payload.email);
+      if (!cache || cache !== 'DONE') throw new UnauthorizedException();
       payload.password = await bcrypt.hash(payload.password, 12);
       switch (type) {
         case 'owner':
@@ -68,6 +80,33 @@ export class AuthService {
     } else {
       throw new ConflictException();
     }
+  }
+
+  async sendMail(email: string) {
+    const cache = await this.cacheManager.get<string | undefined>(email);
+    const isExist =
+      (await this.clientRepository.count({ where: { email } })) +
+      (await this.clientRepository.count({ where: { email } }));
+    if (cache === 'DONE' || isExist) throw new ConflictException();
+
+    const number = crypto.randomInt(0, 999999).toString().padStart(6, '0');
+    await this.mailerService.sendMail({
+      to: email,
+      from: process.env.OAUTH_USER,
+      subject: '이메일 인증 요청 메일입니다.',
+      html: '인증 코드: ' + `<b> ${number}</b>`,
+    });
+    await this.cacheManager.set(email, number);
+  }
+
+  async checkMail({ email, code }: ConfirmEmailRequestDto) {
+    const cache = await this.cacheManager.get<string | undefined>(email);
+    if (!cache || cache === 'DONE') throw new NotFoundException();
+    if (cache === code) {
+      await this.cacheManager.del(email);
+      await this.cacheManager.set(email, 'DONE');
+      return;
+    } else throw new UnauthorizedException();
   }
 
   async validateUser(
