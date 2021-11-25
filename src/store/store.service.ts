@@ -56,16 +56,13 @@ export class StoreService {
     }
   }
   async getStore(storeId: number): Promise<GetPost> {
-    try {
-      // return await this.storeRepo.getStore(storeId);
-      const store = await this.storeRepo.getStore(storeId);
-
-      const rate: number = await this.reviewRepo.getAvg(storeId);
-      return new GetPost(store, rate);
-    } catch (e) {
-      console.log(e);
-      throw new InternalServerErrorException('서버 에러');
+    // return await this.storeRepo.getStore(storeId);
+    const store = await this.storeRepo.getStore(storeId);
+    if (!store) {
+      throw new NotFoundException('상점을 찾을 수 없습니다.');
     }
+    const rate: number = await this.reviewRepo.getAvg(storeId);
+    return new GetPost(store, rate);
   }
 
   async getStores(
