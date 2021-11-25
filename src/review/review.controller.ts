@@ -17,6 +17,10 @@ import {
   CreateReviewRequestParamDto,
 } from './request/create-review.dto';
 import { Response } from '../shared/response/Response';
+import {
+  CreateReplyRequestBodyDto,
+  CreateReplyRequestParamDto,
+} from './request/create-reply.dto';
 
 @Controller('review')
 export class ReviewController {
@@ -33,5 +37,18 @@ export class ReviewController {
   ) {
     await this.reviewService.createReview(req, payload, param);
     return new Response(HttpStatus.CREATED, 'Review created successfully');
+  }
+
+  @Post('reply/:reviewId')
+  @Roles(Role.Owner)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  async createReply(
+    @Request() req,
+    @Body() payload: CreateReplyRequestBodyDto,
+    @Param() param: CreateReplyRequestParamDto,
+  ) {
+    await this.reviewService.createReply(req, payload, param);
+    return new Response(HttpStatus.CREATED, 'Reply created successfully');
   }
 }

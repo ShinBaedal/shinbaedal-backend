@@ -6,12 +6,14 @@ import { ReviewRepository } from '../shared/entities/review/review.repository';
 import { OrderRepository } from '../shared/entities/order/order.repository';
 import { HttpModule } from '@nestjs/axios';
 import { ClientRepository } from '../shared/entities/client/client.repository';
+import { ReplyRepository } from '../shared/entities/reply/reply.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ClientRepository,
       ReviewRepository,
+      ReplyRepository,
       OrderRepository,
     ]),
     HttpModule.register({
