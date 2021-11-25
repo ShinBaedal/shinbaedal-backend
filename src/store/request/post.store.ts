@@ -11,4 +11,13 @@ export class PostStoreDto {
   photoUrl: string;
   @IsNotEmpty({ message: '전화번호는 공백이 불가능 합니다.' })
   tel: string;
+
+  @IsNotEmpty({ message: '메뉴는 공백이 불가능 합니다.' })
+  menus: MenuDto[];
+}
+
+export class MenuDto {
+  photoUrl: string;
+  name: string;
+  price: number;
 }
