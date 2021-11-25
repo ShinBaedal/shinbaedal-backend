@@ -10,7 +10,7 @@ import {
 import { Client } from '../client/client.entity';
 import { Store } from '../store/store.entity';
 import { Order } from '../order/order.entity';
-import { Type } from 'src/shared/enums/review.type';
+import { Reply } from '../reply/reply.entity';
 
 @Entity()
 export class Review {
@@ -40,6 +40,10 @@ export class Review {
   @OneToOne((type) => Order, (order) => order.id, { nullable: false })
   @JoinColumn({ name: 'order_id' })
   orderId: Order;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @OneToOne((type) => Reply, (reply) => reply.reviewId, { nullable: false })
+  replyId: Reply;
 
   @CreateDateColumn()
   createdAt: Date;

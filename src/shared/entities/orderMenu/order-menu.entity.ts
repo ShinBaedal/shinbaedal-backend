@@ -8,12 +8,12 @@ export class OrderMenu {
   id: number;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Order, (order) => order.id, { nullable: false })
+  @ManyToOne((type) => Order, (order) => order.orderMenu, { nullable: false })
   @JoinColumn({ name: 'order_id' })
   orderId: Order;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @ManyToOne((type) => Menu, (menu) => menu.id, { nullable: false })
+  @ManyToOne((type) => Menu, (menu) => menu.orderMenu, { nullable: false })
   @JoinColumn({ name: 'menu_id' })
   menuId: Menu;
 }
