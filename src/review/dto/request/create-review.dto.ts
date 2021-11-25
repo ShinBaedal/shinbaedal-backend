@@ -17,5 +17,5 @@ export class CreateReviewRequestBodyDto {
 
 export class CreateReviewRequestParamDto {
   @IsString()
-  orderId: string;
+  storeId: string;
 }
