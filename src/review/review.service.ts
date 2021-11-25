@@ -80,8 +80,11 @@ export class ReviewService {
     });
   }
 
-  async getReviewList(storeId: string): Promise<ReviewListResponseDto> {
-    const [res, count] = await this.reviewRepository.getReviews(storeId);
+  async getReviewList(
+    storeId: string,
+    type: string,
+  ): Promise<ReviewListResponseDto> {
+    const [res, count] = await this.reviewRepository.getReviews(storeId, type);
     if (!count) throw new NotFoundException('리뷰가 존재하지 않습니다.');
 
     const reviews = res.map(
