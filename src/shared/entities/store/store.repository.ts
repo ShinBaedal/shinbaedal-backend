@@ -42,6 +42,7 @@ export class StoreRepository extends Repository<Store> {
       .innerJoin('category', 'category', 'store.category_id = category.id')
       .select('store.*, category.category')
       .where('store.address like :address', { address: `${address}%` })
+      .where('category.category = :category', { category: category })
       .getRawMany();
   }
 
