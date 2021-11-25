@@ -11,10 +11,14 @@ export class OwnerRepository extends Repository<Owner> {
   }
 
   async insertOneOwner(payload: OwnerSignupRequestDto) {
-    await this.createQueryBuilder().insert().into(Owner).values({
-      email: payload.email,
-      password: payload.password,
-      name: payload.name,
-    });
+    await this.createQueryBuilder()
+      .insert()
+      .into(Owner)
+      .values({
+        email: payload.email,
+        password: payload.password,
+        name: payload.name,
+      })
+      .execute();
   }
 }
