@@ -17,6 +17,7 @@ import { StoreModule } from './store/store.module';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -43,6 +44,7 @@ import { join } from 'path';
     AuthModule,
     StoreModule,
     FileModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
