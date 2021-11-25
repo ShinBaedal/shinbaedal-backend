@@ -33,7 +33,7 @@ import { ResponseData } from '../shared/response/ResponseData';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post(':orderId')
+  @Post(':storeId')
   @Roles(Role.Client)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
