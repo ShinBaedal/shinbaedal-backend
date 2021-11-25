@@ -55,7 +55,7 @@ export class OrderService {
   async getOrderList(
     email: string,
     role: string,
-  ): Promise<OrderListResponseDto> {
+  ): Promise<OrderListResponseDto[]> {
     switch (role) {
       case 'client': {
         const orders = (await this.orderRepository.getOrdersByUser(email)).map(
@@ -69,9 +69,7 @@ export class OrderService {
           }),
         );
 
-        return {
-          orders: await Promise.all(orders),
-        };
+        return await Promise.all(orders);
       }
 
       case 'owner': {
@@ -86,9 +84,7 @@ export class OrderService {
           }),
         );
 
-        return {
-          orders: await Promise.all(orders),
-        };
+        return await Promise.all(orders);
       }
     }
   }
