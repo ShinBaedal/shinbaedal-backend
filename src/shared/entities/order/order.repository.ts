@@ -36,4 +36,23 @@ export class OrderRepository extends Repository<Order> {
       .where('id = :orderId', { orderId })
       .execute();
   }
+
+  async getOrdersByUser(email: string): Promise<Order[]> {
+    return await this.createQueryBuilder('order')
+      .select()
+      .leftJoinAndSelect('order.clientId', 'clientId')
+      .leftJoinAndSelect('order.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
+      .where('clientId.email = :email', { email })
+      .getMany();
+  }
+
+  async getOrdersByOwner(email: string): Promise<Order[]> {
+    return await this.createQueryBuilder('order')
+      .select()
+      .leftJoinAndSelect('order.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
+      .where('ownerId.email = :email', { email })
+      .getMany();
+  }
 }
