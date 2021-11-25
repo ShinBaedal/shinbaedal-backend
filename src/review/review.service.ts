@@ -39,11 +39,12 @@ export class ReviewService {
     param: CreateReviewRequestParamDto,
   ): Promise<void> {
     const order = await this.orderRepository.getOrder(param.orderId);
-    if (!order) throw new NotFoundException('주문을 찾을 수 없음');
-    if (order.clientId.email !== req.user.email) throw new ForbiddenException();
+    if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
+    if (order.clientId.email !== req.user.email)
+      throw new ForbiddenException('접근할 수 없는 주문입니다.');
 
     const review = await this.reviewRepository.isReviewExist(param.orderId);
-    if (review) throw new ConflictException('이미 리뷰가 존재함');
+    if (review) throw new ConflictException('이미 작성된 리뷰입니다.');
 
     const res = await lastValueFrom(
       this.httpService.post(process.env.CLOVA_SENTIMENT_API_URL, {
@@ -67,10 +68,10 @@ export class ReviewService {
     param: CreateReplyRequestParamDto,
   ): Promise<void> {
     const review = await this.reviewRepository.getReview(param.reviewId);
-    if (!review) throw new NotFoundException('리뷰를 찾을 수 없음');
+    if (!review) throw new NotFoundException('리뷰가 존재하지 않습니다.');
 
     if (review.storeId.ownerId.email !== req.user.email)
-      throw new ForbiddenException('유저의 주문이 아님');
+      throw new ForbiddenException('접근할 수 없는 리뷰입니다.');
 
     await this.replyRepository.insertOneReply({
       reviewId: param.reviewId,
@@ -79,12 +80,9 @@ export class ReviewService {
     });
   }
 
-  async getReviewList(
-    storeId: string,
-    type: string,
-  ): Promise<ReviewListResponseDto> {
-    const [res, count] = await this.reviewRepository.getReviews(storeId, type);
-    if (!count) throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+  async getReviewList(storeId: string): Promise<ReviewListResponseDto> {
+    const [res, count] = await this.reviewRepository.getReviews(storeId);
+    if (!count) throw new NotFoundException('리뷰가 존재하지 않습니다.');
 
     const reviews = res.map(
       (review): ReviewDto => ({
