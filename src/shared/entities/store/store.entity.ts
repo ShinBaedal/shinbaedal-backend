@@ -3,6 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -27,7 +28,9 @@ export class Store {
   tel: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @OneToOne((type) => Category, (category) => category.id, { nullable: false })
+  @ManyToOne((type) => Category, (category) => category.stores, {
+    nullable: false,
+  })
   @JoinColumn({ name: 'category_id' })
   categoryId: Category;
 
