@@ -19,7 +19,6 @@ export class ClientRepository extends Repository<Client> {
         email: payload.email,
         password: payload.password,
         name: payload.name,
-        address: payload.address,
       })
       .execute();
   }
