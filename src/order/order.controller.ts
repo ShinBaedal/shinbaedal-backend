@@ -1,12 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
-  Post,
-  UseGuards,
-  Request,
-  Patch,
   Param,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Role } from '../shared/enums/role.enum';
@@ -16,6 +17,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateOrderRequestDto } from './dto/request/create-order.dto';
 import { Response } from '../shared/response/Response';
 import { MarkOrderDoneRequestDto } from './dto/request/mark-order-done.dto';
+import { ResponseData } from '../shared/response/ResponseData';
 
 @Controller('order')
 export class OrderController {
@@ -45,6 +47,16 @@ export class OrderController {
     return new Response(
       HttpStatus.CREATED,
       `Order ${param.orderId} marked as done successfully`,
+    );
+  }
+
+  @Get('my')
+  @UseGuards(JwtAuthGuard)
+  async getOrderList(@Request() req) {
+    return new ResponseData(
+      HttpStatus.OK,
+      'List of orders successfully retrieved',
+      await this.orderService.getOrderList(req.user.email, req.user.role),
     );
   }
 }
