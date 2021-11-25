@@ -31,7 +31,7 @@ export class OrderService {
 
     const insertResult = await this.orderRepository.insertOneOrder({
       clientId: (await this.clientRepository.getOneClient(email)).id,
-      storeId: (await this.storeRepository.getStore(payload.storeId)).id,
+      storeId: payload.storeId,
       orderMenu: menus,
     });
 
