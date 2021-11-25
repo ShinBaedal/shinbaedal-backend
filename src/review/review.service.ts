@@ -38,12 +38,15 @@ export class ReviewService {
     payload: CreateReviewRequestBodyDto,
     param: CreateReviewRequestParamDto,
   ): Promise<void> {
-    const order = await this.orderRepository.getOrder(param.orderId);
+    const order = await this.orderRepository.getOrderByStoreId(
+      param.storeId,
+      req.user.email,
+    );
     if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
     if (order.clientId.email !== req.user.email)
       throw new ForbiddenException('접근할 수 없는 주문입니다.');
 
-    const review = await this.reviewRepository.isReviewExist(param.orderId);
+    const review = await this.reviewRepository.isReviewExist(param.storeId);
     if (review) throw new ConflictException('이미 작성된 리뷰입니다.');
 
     const res = await lastValueFrom(
