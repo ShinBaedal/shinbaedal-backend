@@ -20,6 +20,7 @@ import { join } from 'path';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
