@@ -4,13 +4,13 @@ import { CreateOrderPayload } from '../../../order/interfaces/create-order-paylo
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
-  async getOrder(email: string, orderId: string): Promise<Order> {
+  async getOrder(orderId: string): Promise<Order> {
     return await this.createQueryBuilder('order')
       .select()
       .leftJoinAndSelect('order.clientId', 'clientId')
-      .leftJoinAndSelect('order.storeId', 'store')
+      .leftJoinAndSelect('order.storeId', 'storeId')
+      .leftJoinAndSelect('storeId.ownerId', 'ownerId')
       .where('order.id = :orderId', { orderId })
-      .andWhere('clientId.email = :email', { email })
       .getOne();
   }
 
@@ -24,6 +24,16 @@ export class OrderRepository extends Repository<Order> {
         storeId: () => payload.storeId.toString(),
         orderMenu: payload.orderMenu,
       })
+      .execute();
+  }
+
+  async markOrderAsDone(orderId: number): Promise<void> {
+    await this.createQueryBuilder()
+      .update(Order)
+      .set({
+        isDone: true,
+      })
+      .where('id = :orderId', { orderId })
       .execute();
   }
 }
