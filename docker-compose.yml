@@ -3,10 +3,9 @@ version: '3.3'
 services:
   backend:
     container_name: shinbaedal
-    restart: always
     build: .
     environment:
-      - DB_HOST=localhost
+      - DB_HOST=mysql
       - DB_PORT=3306
       - DB_USERNAME=root
       - DB_PASSWORD=pure6671
@@ -14,9 +13,11 @@ services:
       - DB_SYNCHRONIZE=ad
       - JWT_SECRET=qwqewqrqwrqw
       - SERVER_ADDRESS=http://localhost:8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
-      - ./src:/var/www/shinbaedal/src
-    working_dir: /var/www/shinbaedal
+      - ./src:/usr/app/src
+    working_dir: /usr/app
     ports:
       - '3000:3000'
     links:
@@ -31,13 +32,14 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=pure6671
-      - MYSQL_DATBASE=shinbaedal
+      - MYSQL_DATABASE=shinbaedal
+      - MYSQL_ROOT_HOST=%
     ports:
       - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
   redis:
-    container_name: shinbaedal_sql
+    container_name: redis
     restart: always
     image: redis:6
     ports:

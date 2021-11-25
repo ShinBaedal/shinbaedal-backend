@@ -1,28 +1,24 @@
-FROM node:16.8.0-alpine
+FROM node:lts AS builder
 
-WORKDIR /usr/src/app
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm i
 
-COPY package*.json ./
+COPY ./src ./src
+COPY ./tsconfig.json ./
+COPY ./tsconfig.build.json ./
+COPY ./nest-cli.json ./
 
-RUN npm install --only=development
+RUN npm run build
 
-COPY . .
+FROM node:lts-alpine
 
-RUN npm build
+WORKDIR /usr/app
 
-FROM node:16.8.0-alpine as production
+COPY --from=builder ./node_modules ./node_modules
+COPY --from=builder ./dist ./dist
+COPY package.json ./
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+EXPOSE 3000
 
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:prod"]
