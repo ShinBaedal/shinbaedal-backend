@@ -9,7 +9,4 @@ export class ClientSignupRequestDto {
 
   @IsString()
   name: string;
-
-  @IsString()
-  address: string;
 }
