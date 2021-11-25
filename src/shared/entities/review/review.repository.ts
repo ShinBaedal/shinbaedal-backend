@@ -14,12 +14,13 @@ export class ReviewRepository extends Repository<Review> {
       .getRawOne();
   }
 
-  async isReviewExist(orderId: string): Promise<number> {
+  async isReviewExist(storeId: string): Promise<number> {
     return await this.createQueryBuilder('review')
       .select()
       .leftJoinAndSelect('review.orderId', 'orderId')
       .leftJoinAndSelect('review.clientId', 'clientId')
-      .andWhere('orderId.id = :orderId', { orderId })
+      .leftJoinAndSelect('review.storeId', 'storeId')
+      .andWhere('storeId.id = :storeId', { storeId })
       .getCount();
   }
 
