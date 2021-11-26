@@ -100,7 +100,7 @@ export class ReviewService {
         menuNames: review.orderId.orderMenu.map(
           (orderMenu) => orderMenu.menuId.name,
         ),
-        type: review.type,
+        type: this.changeTypeValueToKorean(review.type),
         createdAt: review.createdAt,
         content: review.content,
         rate: review.rate,
@@ -116,5 +116,18 @@ export class ReviewService {
       reviewCount: count,
       reviews,
     };
+  }
+
+  changeTypeValueToKorean(type: string): string {
+    switch (type) {
+      case 'POSITIVE':
+        return '긍정적 리뷰';
+      case 'NEUTRAL':
+        return '중립적 리뷰';
+      case 'NEGATIVE':
+        return '부정적 리뷰';
+      case 'MALIGNITY':
+        return '악성 리뷰';
+    }
   }
 }
