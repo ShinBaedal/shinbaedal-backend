@@ -5,6 +5,6 @@ export class GetUserResponse {
   constructor(user) {
     this.id = user.id;
     this.name = user.name;
-    this.address = user.address == undefined ? '주소가 없어요.' : user.address;
+    this.address = user.address == '' ? '주소가 없어요.' : user.address;
   }
 }
